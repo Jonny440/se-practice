@@ -96,16 +96,16 @@ Example: analyze_marks([40, 60, 80], 50) → average 60, highest 80, lowest 40, 
 
 | Situation | Covered by the AI's tests? |
 | --- | --- |
-| one mark | |
-| decimals | |
-| custom pass_mark | |
-| empty list | |
-| text value | |
-| below 0 / above 100 | |
+| one mark | | yes - test 2
+| decimals | | yes - test 3
+| custom pass_mark | | yes - test 4
+| empty list | | yes - test 5
+| text value | | yes - test 6
+| below 0 / above 100 | | yes - tests 7 and 8
 
-**Do the AI's own tests pass against the AI's own code?** yes / no
+**Do the AI's own tests pass against the AI's own code?** yes
 
-**Do they agree with the harness in section 6?** yes / no — if no, where do they disagree:
+**Do they agree with the harness in section 6?** yes 
 
 **Assumptions C stated explicitly before the code:**
 
@@ -116,18 +116,33 @@ Example: analyze_marks([40, 60, 80], 50) → average 60, highest 80, lowest 40, 
 **The complete prompt I wrote** (one message, sent to a fresh chat):
 
 ```
-
+you are a python developer. implement analyze_marks(marks, pass_mark=50). return a dictionary with exactly these keys: "average", "highest", "lowest", and "pass_rate".
+here are you requirements:
+marks must be a non-empty list; every mark must be numeric and between 0 and 100 inclusive; non-numeric values must raise valueError; marks below 0 or above 100 must raise valueError; an empty list must raise valueerror.; pass_mark must be numeric and between 0 and 100 inclusive; a mark passes when mark >= pass_mark; pass_rate is the percentage of marks that pass; round average and pass_rate to 2 decimal places; highest and lowest should preserve their numeric values; do not use external libraries; do not read input or print anything inside the function.
+use this example to verify the expected behavior:
+analyze_marks([40, 60, 80], 50)
+return -> {"average": 60.0, "highest": 80, "lowest": 40, "pass_rate": 66.67}
+include tests for all of these cases:
+1. one mark
+2. decimal marks
+3. a custom pass_mark
+4. an empty list
+5. a non-numeric value such as "60"
+6. a mark below 0
+7. a mark above 100
+for invalid cases, the expected behavior is valueerror.
+before the code, briefly state any remaining assumptions you are making. then provide the implementation and tests.
 ```
 
 **What I deliberately added that A, B and C did not have:**
 
-1.
-2.
-3.
+1. Rounding criteria for pass rate and average
+2. To not input or print anything insidde function
+3. Asked him to state his assumptions, so i can clear them before the code
 
 **The ambiguity I found in the specification, and how I resolved it inside Prompt D:**
 
----
+--- There were no rules about rounding the pass rate and average float numbers.
 
 ## 6. Test results — the evidence
 
@@ -135,13 +150,13 @@ Six cases × four prompts. Verdicts are **PASS**, **FAIL** or **ERROR** only.
 
 | # | Call | Required | A | B | C | D |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `analyze_marks([40, 60, 80], 50)` | avg 60 · high 80 · low 40 · rate 66.67 | | | | |
-| 2 | `analyze_marks([100], 50)` | avg 100 · high 100 · low 100 · rate 100 | | | | |
-| 3 | `analyze_marks([49.5, 50], 50)` | avg 49.75 · high 50 · low 49.5 · rate 50 | | | | |
-| 4 | `analyze_marks([], 50)` | raises ValueError | | | | |
-| 5 | `analyze_marks([40, "60"], 50)` | raises ValueError | | | | |
-| 6 | `analyze_marks([-1, 50, 101], 50)` | raises ValueError | | | | |
-| | **Totals** | | /6 | /6 | /6 | /6 |
+| 1 | `analyze_marks([40, 60, 80], 50)` | avg 60 · high 80 · low 40 · rate 66.67 | ERROR | | | |
+| 2 | `analyze_marks([100], 50)` | avg 100 · high 100 · low 100 · rate 100 | ERROR | | | |
+| 3 | `analyze_marks([49.5, 50], 50)` | avg 49.75 · high 50 · low 49.5 · rate 50 | ERROR | | | |
+| 4 | `analyze_marks([], 50)` | raises ValueError | ERROR | | | |
+| 5 | `analyze_marks([40, "60"], 50)` | raises ValueError | ERROR | | | |
+| 6 | `analyze_marks([-1, 50, 101], 50)` | raises ValueError | ERROR | | | |
+| | **Totals** | | 0/6 | /6 | /6 | /6 |
 
 **For every FAIL and ERROR above, one line: what was returned or raised instead.**
 
