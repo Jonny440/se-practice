@@ -37,23 +37,23 @@ n/a — used Python
 **Prompt sent** (should be exactly one sentence):
 
 ```
-
+Write Python code to analyze student marks.
 ```
 
 **Assumptions the AI made that I never gave it** — list them, one per line. A data format, a pass
 threshold, a rounding rule, an input method, an invented feature all count.
 
-1.
-2.
-3.
+1. Assumed the grading criteria
+2. Assumed the results i want
+3. Assumed the input method
 
 **Questions it should have asked and did not:**
 
-1.
-2.
+1. What to do with invalid input types?
+2. What kind of format of the result i want to see?
 
-**Is the function named `analyze_marks` with the required signature?** yes / no — if no, what is it
-called:
+**Is the function named `analyze_marks` with the required signature?** no — if no, what is it
+called: there is no functions at all
 
 **First impression before testing** (one sentence — you will compare this with section 6 later):
 
@@ -64,18 +64,23 @@ called:
 **Prompt sent** (paste it in full, including any substitutions):
 
 ```
-
+You are a Python developer. Implement analyze_marks(marks, pass_mark=50).
+Return average, highest, lowest, and pass_rate in a dictionary. Accept marks
+from 0 to 100; raise ValueError for an empty list, non-numeric values, or
+out-of-range values. Use no external libraries. Return code plus a short
+explanation.
 ```
 
 **What B fixed compared to A:**
 
-1.
-2.
+1. Passing criteria
+2. Wrapped code into a function
+3. Checks if the inputs are valid
 
 **What B still leaves open:**
 
-1.
-2.
+1. Code does not handle interactive input
+2. 
 
 ---
 
@@ -84,7 +89,7 @@ called:
 **What I appended to Prompt B:**
 
 ```
-
+Example: analyze_marks([40, 60, 80], 50) → average 60, highest 80, lowest 40, pass_rate 66.67. Include tests for: one mark, decimals, custom pass_mark, empty list, text value, and marks below 0 or above 100. State any remaining assumptions before the code.
 ```
 
 **Tests the AI wrote for itself** — how many, and which situations do they cover?
