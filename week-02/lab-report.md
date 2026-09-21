@@ -150,19 +150,19 @@ Six cases × four prompts. Verdicts are **PASS**, **FAIL** or **ERROR** only.
 
 | # | Call | Required | A | B | C | D |
 | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `analyze_marks([40, 60, 80], 50)` | avg 60 · high 80 · low 40 · rate 66.67 | ERROR | | | |
-| 2 | `analyze_marks([100], 50)` | avg 100 · high 100 · low 100 · rate 100 | ERROR | | | |
-| 3 | `analyze_marks([49.5, 50], 50)` | avg 49.75 · high 50 · low 49.5 · rate 50 | ERROR | | | |
-| 4 | `analyze_marks([], 50)` | raises ValueError | ERROR | | | |
-| 5 | `analyze_marks([40, "60"], 50)` | raises ValueError | ERROR | | | |
-| 6 | `analyze_marks([-1, 50, 101], 50)` | raises ValueError | ERROR | | | |
-| | **Totals** | | 0/6 | /6 | /6 | /6 |
+| 1 | `analyze_marks([40, 60, 80], 50)` | avg 60 · high 80 · low 40 · rate 66.67 | ERROR | PASS | PASS | PASS |
+| 2 | `analyze_marks([100], 50)` | avg 100 · high 100 · low 100 · rate 100 | ERROR | PASS | PASS | PASS |
+| 3 | `analyze_marks([49.5, 50], 50)` | avg 49.75 · high 50 · low 49.5 · rate 50 | ERROR | PASS | PASS | PASS |
+| 4 | `analyze_marks([], 50)` | raises ValueError | ERROR | PASS | PASS | PASS |
+| 5 | `analyze_marks([40, "60"], 50)` | raises ValueError | ERROR | PASS | PASS | PASS |
+| 6 | `analyze_marks([-1, 50, 101], 50)` | raises ValueError | ERROR | PASS | PASS | PASS |
+| | **Totals** | | 0/6 | 6/6 | 6/6 | 6/6 |
 
 **For every FAIL and ERROR above, one line: what was returned or raised instead.**
 
 | Prompt | Case | What actually happened |
 | --- | --- | --- |
-| | | |
+| A | 1-6 | analyze_marks function is missing; Prompt A produced an interactive program instead of the required function |
 | | | |
 | | | |
 
@@ -174,25 +174,29 @@ Six cases × four prompts. Verdicts are **PASS**, **FAIL** or **ERROR** only.
 **Prompt A**
 
 ```
-
+Z1@MacBook-Pro-Di week-02 % python3 tests/test_analyze_marks.py code/prompt_a.py
+Z1@MacBook-Pro-Di week-02 %
 ```
 
 **Prompt B**
 
 ```
-
+Z1@MacBook-Pro-Di week-02 % python3 tests/test_analyze_marks.py code/prompt_b.py
+Z1@MacBook-Pro-Di week-02 %
 ```
 
 **Prompt C**
 
 ```
-
+Z1@MacBook-Pro-Di week-02 % python3 tests/test_analyze_marks.py code/prompt_c.py
+Z1@MacBook-Pro-Di week-02 %
 ```
 
 **Prompt D**
 
 ```
-
+Z1@MacBook-Pro-Di week-02 % python3 tests/test_analyze_marks.py code/prompt_d.py
+Z1@MacBook-Pro-Di week-02 %
 ```
 
 ---
@@ -203,18 +207,20 @@ Six cases × four prompts. Verdicts are **PASS**, **FAIL** or **ERROR** only.
 
 | Criterion | A | B | C | D |
 | --- | --- | --- | --- | --- |
-| Correctness (cases passed) | | | | |
-| Requirement coverage | | | | |
-| Verifiability (tests) | | | | |
-| Assumptions stated | | | | |
-| Noise (2 = none) | | | | |
-| **Total / 10** | | | | |
+| Correctness (cases passed) | 0 | 2 | 2 | 2 |
+| Requirement coverage | 0 | 2 | 2 | 2 |
+| Verifiability (tests) | 0 | 0 | 2 | 2 |
+| Assumptions stated | 0 | 0 | 0 | 0 |
+| Noise (2 = none) | 2 | 2 | 2 | 2 |
+| **Total / 10** | 2 | 6 | 8 | 8 |
 
-**Prompt length, in words:** A ____ · B ____ · C ____ · D ____
+**Prompt length, in words:** A 7 · B 46 · C 87 · D 201
 
 **Words added per point gained** — B over A, C over B, D over C. One line on what that ratio says:
 
----
+B over A: 39 words added / 4 points gained = 9.75 words per point
+C over B: 41 words added / 2 points gained = 20.5 words per point
+D over C: 114 words added / 0 points gained = N/A
 
 ## 8. Conclusion — 150–200 words
 
@@ -225,13 +231,10 @@ changed verdict; (3) what was pure noise; (4) the ambiguity and your resolution.
 Name test cases and real returned values. "More detailed prompts work better" scores zero.
 
 ```
-(150–200 words)
-
-
-
+Prompts C and D received the highest score, both with 8/10, and both passed all six harness cases. For actual work, D would be the more reusable prompt because it states the required input type, validation rules, output keys, rounding, constraints, and test cases explicitly. The single addition that bought the most correctness was the detailed implementation specification introduced in Prompt B. It changed the result from Prompt A, which had no analyze_marks function and therefore received ERROR on all six cases, to Prompt B, which passed all six cases. Prompt C did not increase the number of harness cases passed, but its added tests improved verifiability. The AI's eight self-tests covered one mark, decimals, a custom pass_mark, an empty list, text input, and values below and above 0–100. The pure noise was the extra explanation and comments that did not affect the six required results. One important ambiguity was rounding: the example requires pass_rate 66.67 rather than the unrounded 66.666..., so C and D explicitly rounded average and pass_rate to two decimals. The separate harness still uses tolerance 0.01.
 ```
 
-**Word count:**
+**Word count:** 160
 
 ---
 
@@ -239,5 +242,5 @@ Name test cases and real returned values. "More detailed prompts work better" sc
 
 Written before class, answered in class.
 
-1.
-2.
+1. How detailed the prompt should be to get the most optimal result?
+2. Which requirements are the most necessary to mention in prompt?
