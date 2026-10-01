@@ -14,7 +14,6 @@ rectangle "Smart Campus Study Room Booking System" {
   usecase "Unblock a room" as UC5
   usecase "Review room usage" as UC6
 
-  usecase "Receive booking confirmation" as UC7
 
   Student --> UC1
   Student --> UC2
@@ -24,17 +23,17 @@ rectangle "Smart Campus Study Room Booking System" {
   Administrator --> UC5
   Administrator --> UC6
 
-  UC1 ..> UC7 : <<include>>
 }
 
 note right of UC1
-  Constraints:
   R1: Future start, duration > 0
       and <= 2 hours
   R2: No overlapping active
       bookings for the same room
   R3: Blocked rooms cannot
       accept new bookings
+  R4: Successful booking
+      produces a confirmation
 end note
 
 note right of UC3
@@ -68,5 +67,4 @@ note bottom
      bookings, waiting lists, extra
      notifications, or registration.
 end note
-
 @enduml
