@@ -1,0 +1,72 @@
+@startuml
+left to right direction
+
+actor Student
+actor Administrator
+
+rectangle "Smart Campus Study Room Booking System" {
+
+  usecase "Book a free study room" as UC1
+  usecase "View room availability" as UC2
+  usecase "Cancel own booking" as UC3
+
+  usecase "Block a room" as UC4
+  usecase "Unblock a room" as UC5
+  usecase "Review room usage" as UC6
+
+  usecase "Receive booking confirmation" as UC7
+
+  Student --> UC1
+  Student --> UC2
+  Student --> UC3
+
+  Administrator --> UC4
+  Administrator --> UC5
+  Administrator --> UC6
+
+  UC1 ..> UC7 : <<include>>
+}
+
+note right of UC1
+  Constraints:
+  R1: Future start, duration > 0
+      and <= 2 hours
+  R2: No overlapping active
+      bookings for the same room
+  R3: Blocked rooms cannot
+      accept new bookings
+end note
+
+note right of UC3
+  R2 applies to the booking
+  being released.
+end note
+
+note bottom of UC4
+  R3: Blocking a room prevents
+  new bookings.
+end note
+
+note bottom of UC5
+  R3: Unblocking makes the room
+  available for new bookings.
+end note
+
+note bottom
+  Assumptions:
+  1. "Book a free study room" includes
+     checking that the requested slot
+     satisfies R1-R3.
+  2. A booking confirmation is produced
+     only after a booking succeeds.
+  3. Students may cancel only their own
+     bookings.
+  4. Room usage review is an
+     administrator-only goal.
+  5. No separate use cases are modeled
+     for payments, equipment, recurring
+     bookings, waiting lists, extra
+     notifications, or registration.
+end note
+
+@enduml
