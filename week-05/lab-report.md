@@ -29,7 +29,64 @@ grader find your answers by them. Add rows to any table; never remove its header
 **The assistant's plan, pasted unedited:**
 
 ```text
-(paste here)
+### Implementation plan
+
+Check the conditions in this order:
+
+1. **Validate the time interval (AC1)**
+   - `0 <= start`
+   - `start < end`
+   - `end <= 1440`
+   - `start > now`
+   - If any fails → `False`.
+
+2. **Check duration (AC2)**
+   - Calculate `end - start`.
+   - It must be `<= 120`.
+   - Otherwise → `False`.
+
+3. **Check room status (AC3)**
+   - If `blocked` is `True` → `False`.
+
+4. **Check existing bookings for overlap (AC4)**
+   - Compare the requested interval with every `(existing_start, existing_end)`.
+   - Intervals overlap when the requested start is before an existing end **and** the requested end is after an existing start.
+   - If any overlap exists → `False`.
+   - Equal endpoints are allowed.
+
+5. **Accept**
+   - If all checks pass → `True`.
+   - Do not modify `existing` or any other input.
+
+### Assumptions
+
+- `start` and `end` are intended to be integer minutes as specified by the contract.
+- `existing` contains only the valid active-booking tuples described by the contract, so individual existing bookings do not need to be revalidated.
+- `now` and `blocked` satisfy the stated contract.
+- All times refer to the same calendar date.
+- The function only makes the booking decision; it does not save or confirm a booking.
+
+### Boundary cases to test
+
+| Case | Expected |
+|---|---|
+| `start = 0` | Depends on `now`; valid only if `0 > now` |
+| `end = 1440` | Valid boundary |
+| `start = end` | `False` |
+| `start > end` | `False` |
+| `start < 0` | `False` |
+| `end > 1440` | `False` |
+| `start = now` | `False` |
+| `start = now + 1` | Valid with respect to AC1 |
+| Duration exactly `120` minutes | Valid with respect to AC2 |
+| Duration `121` minutes | `False` |
+| Room blocked | `False` |
+| No existing bookings | Can be `True` if AC1–AC3 pass |
+| Requested interval ends exactly when existing starts | Allowed |
+| Requested interval starts exactly when existing ends | Allowed |
+| Requested interval partially overlaps an existing booking | `False` |
+| Requested interval completely contains an existing booking | `False` |
+| Requested interval is completely inside an existing booking | `False` |
 ```
 
 **What the plan invented or changed.** One row for every rule in the plan that is not in the
@@ -38,9 +95,26 @@ row saying which lines of the plan you checked against which AC.
 
 | # | What the plan said | What the contract or the AC says | What I did |
 | --- | --- | --- | --- |
-| 1 | | | |
+| 1 | It listed 5 steps of implementation, all according to AC1-AC5 | AC1-AC5 are done correctly | Did no changes |
 
 **Boundary cases the assistant suggested that I kept as tests:**
+| Case | Expected |
+|---|---|
+| `start = 0` | Depends on `now`; valid only if `0 > now` |
+| `end = 1440` | Valid boundary |
+| `start = end` | `False` |
+| `start > end` | `False` |
+| `start < 0` | `False` |
+| `end > 1440` | `False` |
+| `start = now` | `False` |
+| `start = now + 1` | Valid with respect to AC1 |
+| Duration exactly `120` minutes | Valid with respect to AC2 |
+| Duration `121` minutes | `False` |
+| Requested interval ends exactly when existing starts | Allowed |
+| Requested interval starts exactly when existing ends | Allowed |
+| Requested interval partially overlaps an existing booking | `False` |
+| Requested interval completely contains an existing booking | `False` |
+| Requested interval is completely inside an existing booking | `False` |
 
 -
 
