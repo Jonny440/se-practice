@@ -1,0 +1,54 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Student {
+    +bookRoom(): Booking
+    +cancelBooking(booking: Booking): void
+}
+
+class Administrator {
+    +blockRoom(room: Room): void
+    +unblockRoom(room: Room): void
+}
+
+class Room {
+    -blocked: Boolean
+}
+
+class Booking {
+    -start: DateTime
+    -end: DateTime
+    -status: BookingStatus
+    +confirm(): void
+    +cancel(): void
+}
+
+enum BookingStatus {
+    CONFIRMED
+    CANCELLED
+}
+
+Student "1" -- "0..*" Booking : makes
+Room "1" -- "0..*" Booking : is booked in
+Administrator "1" -- "0..*" Room : manages
+
+note right of Booking
+    R1:
+    start is in the future.
+    Duration is > 0 and <= 2 hours.
+
+    R2:
+    Active bookings for the same
+    room cannot overlap.
+
+    R4:
+    A successful booking produces
+    a confirmation.
+end note
+
+note right of Room
+    R3:
+    A blocked room cannot accept
+    a new booking.
+end note
+@enduml
