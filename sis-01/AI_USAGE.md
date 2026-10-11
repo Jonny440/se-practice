@@ -7,7 +7,7 @@ live in `report.md`, section 8 — this file is the summary, not a second copy.
 
 | Tool | Exact model / plan | Used for | Which sections it touched |
 | --- | --- | --- | --- |
-| | | | |
+| DeepSeek | not displayed | Prompt's A-C' | 8, 9 |
 
 **Two parts of this assignment are yours alone. Both were written without AI assistance:** yes / no
 <!-- The initial outline (report.md section 7, written BEFORE Prompt A) and the reflection

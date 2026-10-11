@@ -30,20 +30,20 @@ checker:                        # from your LAST run of python tests/check_repor
   pass: 22
   fail: 2
   error: 0
-  commit:                       # git rev-parse --short HEAD, run right after that checker run
+  commit: a7585be                       # git rev-parse --short HEAD, run right after that checker run
 
 counts:                         # copy from the checker's output; the validator re-measures them
-  main_words:                   # "main report (sections 1-4): N words"
-  reflection_words:             # "reflection: N words"
-  exchanges:                    # how many B-sections are in Appendix B (3 or more)
-  verified_claims:              # complete rows in the verification table
-  revisions:                    # substantive rows in the change log
+  main_words: 911                  # "main report (sections 1-4): N words"
+  reflection_words: 150           # "reflection: N words"
+  exchanges: 3                   # how many B-sections are in Appendix B (3 or more)
+  verified_claims: 2             # complete rows in the verification table
+  revisions: 1                   # substantive rows in the change log
 
 decisions:                      # how many verification rows you marked each way
-  keep:
-  qualify:
-  reject:
+  keep: 0
+  qualify: 2
+  reject: 0
 
-known_fails: []                 # the ID of every check that is still FAIL or ERROR in your last
+known_fails: [L1, V2]                 # the ID of every check that is still FAIL or ERROR in your last
                                 # run, e.g. [W2, E7] — and explain each one in report.md, section 3.
                                 # [] when the checker is clean.
