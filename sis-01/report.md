@@ -1,78 +1,58 @@
 # SIS #01 — Software Engineering Fundamentals, With an AI in the Loop
 
-<!--
-  This is the only file you write your report in. README.md tells you what goes where.
-
-  Rules the checker relies on:
-  - Do not delete, rename or renumber the ## headings, the ### headings, or the **Label:** words.
-  - Replace every "(write here)" and "(paste here)". None may be left when you submit.
-  - Comments like this one are ignored by the word counter. Delete them or leave them.
--->
-
 **Topic:** 1.6
-
-<!-- Exactly one of 1.1 … 1.10, e.g.  **Topic:** 1.4  -->
 
 ---
 
 ## 1. Scenario
 
-<!-- 100–150 words, labels included. One small scenario, used in every prompt and in your
-     whole answer. Anything fictional is labelled in Assumptions. -->
-
 **Question:** University management system development. Where it is allowed to use AI during the development process and where it is prohibited and might lead to sever issues?
 
 **Users:** Project manager, Software developer, QA engineer, End user
 
-**Problem:** It is 1990th, and the Student information, their marks, courses are all stored in paper, spreadsheets and takes a lot of time to manage all of them, so they asked a team to create a uni management system. 
+**Problem:** It is 1990th, and the Student information, their marks, courses are all stored in paper, spreadsheets and takes a lot of time to manage all of them, so they asked a team to create a uni management system.
 
 **Constraints:** 1. New semester starts in 7 months, so the system must be ready within this time; 2. System must be secure, to not let unauthorised people to access student data.
 
-**Risk:** Student's personal data leaking. 
+**Risk:** Student's personal data leaking.
 
 **Assumptions:** fictional 10.000 students, fictional 100 workers(not all of them have access to system)
 
 ## 2. Analysis
 
-<!-- 350–400 words. Your answer to the question, the trade-offs, and how it applies to your
-     scenario. Explain at least two engineering decisions and why they fit the scenario. -->
+The scenario is a time-boxed university management system for 10,000 students and 100 workers, with a hard 7-month deadline and a strict security constraint. The core risk is student personal data leakage. AI can assist across all four engineering principles, but engineers must own the decisions that affect security, accountability, and scope.
 
-(write here)
+Process. A fixed 7-month deadline suits an incremental or waterfall-with-milestones approach. AI can draft a work breakdown, suggest milestones, and generate checklists. However, prioritisation—what to cut if the schedule slips—is a management judgement AI cannot own. The project manager must decide the plan and adjust it as risks emerge.
+
+Dependability. Security, availability, and data integrity are critical. AI can draft candidate threat models, encryption patterns, backup schedules, and audit-log schemas. It cannot certify that the system is secure or hold legal liability. If an incident occurs, AI output can be named as a causal contributor in the incident report, but accountability remains with human roles (ISO/IEC 27001:2022, Clause 5.3; NIST AI RMF 1.0). Human review, threat modelling, and penetration testing remain mandatory.
+
+Requirements management. Traceability between requirements and design is essential. AI can help elicit questions, spot contradictions, and draft a traceability matrix. Only the project manager can resolve conflicting stakeholder needs or sign off scope changes. Because the scenario involves four user groups (PM, developer, QA, end user), requirements must be validated against each group's needs.
+
+Reuse. Reusing proven components—authentication libraries, logging frameworks, database engines—reduces risk within 7 months. AI can recommend candidates and compare trade-offs. Selecting, licensing, integrating, and judging fitness for a sensitive context remains a human engineering decision.
+
+AI allowed vs. prohibited. The correct distinction is three-tiered: AI may assist (with human review), human sign-off is required before adoption, and prohibited only where AI acts without human review. For example, AI may draft candidate architectures or threat models, but final security architecture and access-control policy require human sign-off. Prohibited uses include autonomous AI decisions on access rights, encryption keys, or retention policy. This distinction matters because the scenario asks where AI is allowed and where it is prohibited—a binary answer would ignore the middle ground of assisted-with-review and lose role-specific specificity.
+
 
 ## 3. Review
 
-<!-- 250–300 words. What Prompt B's critique said and what you did with it; your two source
-     checks and your two substantive revisions, each with a reason. Point at the rows of the
-     tables in section 9 ("verification row 2", "change-log row 1"). -->
-
-First of all, it critiques my claim that it happens in 1990th, i added this only because it is a scenario and nowadays truly nobody has a problem with paper spreadsheets. Second, I checked the claim that "no AI can be blamed in a post-incident review." ISO/IEC 27001 puts accountability on human roles, not tools. But an AI's output can still be named as a cause in an incident report. So I changed my wording to separate legal liability from causal attribution (change-log row 2). I also agreed with the critique that my AI table was too black-and-white. My final version now separates "AI decides" from "AI assists, with human review" and shows how this differs for the four user roles (change-log row 3). I did not agree that the 1990s setting changes everything. It changes some constraints, like no mobile and limited bandwidth, but not the core requirements-engineering work. I also accepted the suggestion to build a role × AI-use matrix and to trace the data-leak risk through each principle. That made me state who owns each decision and what check is needed before AI output is used. Overall, the critique helped me replace vague claims with specific, era-appropriate examples and finish with a recommendation instead of just a list of hypotheses. 
+First, it questioned my choice of the 1990s setting. I kept the setting because the scenario needs a concrete context, and paper spreadsheets were a real problem then, but I accepted that the 1990s does not mean "no technology at all." By the mid-1990s, universities commonly had LANs, Unix workstations, and early web browsers, so "any device" can mean any campus-networked terminal rather than a smartphone. That qualification is now in verification row 1 and change-log row 1. Second, I checked the claim that "no AI can be blamed in a post-incident review." ISO/IEC 27001 places accountability on human roles, not tools, but an AI's output can still be named as a causal contributor in an incident report. I therefore separated legal liability from causal attribution (verification row 2; change-log row 2). Third, I agreed that my AI table was too black-and-white. The final version separates "AI assists with human review" from "human sign-off required" and "prohibited," and it shows how this differs for the four user roles (change-log row 3). I did not agree that the 1990s setting changes everything: it changes device assumptions and bandwidth, but not the core requirements-engineering work. The critique also pushed me to build a role × AI-use matrix and to trace the data-leak risk through each principle. That was my own addition: process needs security gates, dependability needs threat modelling, requirements management needs privacy constraints, and reuse needs vetted components. I also kept uncertainty where evidence was limited, especially about the exact year, jurisdiction, retention rules, and device mix, instead of inventing details. Overall, the critique helped me replace vague claims with specific, era-appropriate examples, name who owns each decision, and finish with a recommendation instead of just a list of hypotheses.
 
 ## 4. Conclusion
 
-<!-- 100–150 words. Your recommendation for the scenario and its main limitation. -->
-
-(write here)
+For this scenario, AI should be used as a drafting and analysis assistant under human review, never as an autonomous decision-maker on security, access control, or compliance. The project manager should allow AI to help with planning, risk lists, and documentation, but must personally own prioritisation and scope decisions. The developer may use AI for boilerplate, code review suggestions, and candidate architectures, but must personally verify and integrate any component. The QA engineer may use AI to generate test ideas, but must review and approve all test cases before execution. The end user's data must be protected by human-designed access controls and audit logging. The main limitation of this recommendation is that it depends on the team having clear role definitions and review gates in place; without them, AI assistance can quietly become AI decision-making, which is where serious issues arise.
 
 ## 5. Reflection
 
-<!-- 150–200 words. NOT part of the main total. Written by you, not by the assistant:
-     what helped, what you changed, what you learned. Specific beats flattering. -->
-
-(write here)
+What helped most was the critique in Prompt B. It forced me to stop treating the scenario as a simple "AI yes/no" question and instead think about who owns each decision. The most useful specific change was replacing the binary AI table with a three-tier structure: assist with review, sign-off required, and prohibited. That made the answer directly respond to the question "where is AI allowed and where is it prohibited" without overstating either side. I also learned that the 1990s setting is not just decoration—it changes device assumptions and what "reuse" means, but it does not change the need for requirements traceability or human accountability. The role × AI-use matrix was harder to fill than I expected because I had to name which human role owns each sign-off. That specificity is what the original draft was missing. Next time I would draft the role matrix first, before writing any prose.
 
 ## 6. References
 
-<!-- Full references, one per line, each starting with "- ". Only sources you actually opened.
-     Every URL used in the verification table must also appear here. Example:
-     - Sommerville, I. (2016). Software Engineering, 10th ed., Global Edition. Pearson. Ch. 1.
--->
-
-- (write here)
+- W3C. "A Little History of the World Wide Web." https://www.w3.org/History.html (accessed 2026-10-11).
+- ISO/IEC 27001:2022. Clause 5.3 (roles, responsibilities and authorities) and Annex A.5.24 (incident management).
+- NIST AI Risk Management Framework 1.0 (2023).
+- Sommerville, I. (2016). Software Engineering, 10th ed., Global Edition. Pearson. Ch. 1.
 
 ## 7. Appendix A — Initial outline
-
-<!-- Written BEFORE you run Prompt A. Five points, your own words, numbered. These are the
-     "five points" you paste into Prompt A. -->
 
 1. There should be one general database to access all other smaller ones. ("Studnets, Marks, Course" db inside main)
 2. Each worker should have a role, with different authorities. One admin.
@@ -82,20 +62,12 @@ First of all, it critiques my claim that it happens in 1990th, i added this only
 
 ## 8. Appendix B — AI exchanges
 
-<!-- Complete prompts and complete responses, as text — never screenshots. Paste each inside
-     the fenced block that follows its label. If a response itself contains ``` lines, open
-     and close that block with ~~~~ instead. You may add B4, B5 … after B3 if you ran more. -->
-
 ### B1 — Draft (Prompt A)
 
 - **Tool:** DeepSeek
 - **Model:** not displayed
 - **Date:** 2026-10-11
 - **Purpose:** contextual draft
-
-<!-- Model: the exact model with its version, as the tool shows it (e.g. "GPT-5 Thinking",
-     "Claude Sonnet 4.5"). If the tool does not show it, write: not displayed
-     Date: YYYY-MM-DD -->
 
 **Prompt:**
 
@@ -156,9 +128,9 @@ A central database simplifies access but creates a single point of failure. Role
 
 ### B2 — Critique (Prompt B)
 
-- **Tool:** (write here)
-- **Model:** (write here)
-- **Date:** (write here)
+- **Tool:** DeepSeek
+- **Model:** not displayed
+- **Date:** 2026-10-11
 - **Purpose:** critical review of the draft
 
 **Prompt:**
@@ -363,9 +335,9 @@ Once you've done this, the draft will be ready to rewrite with a clear, defensib
 
 ### B3 — Revision (Prompt C)
 
-- **Tool:** (write here)
-- **Model:** (write here)
-- **Date:** (write here)
+- **Tool:** DeepSeek
+- **Model:** not displayed
+- **Date:** 2026-10-11
 - **Purpose:** revision using my decisions and verified evidence
 
 **Prompt:**
@@ -504,18 +476,12 @@ A central database simplifies access but creates a single point of failure. Role
 
 ### Verification table
 
-<!-- At least two complete rows. Source and locator: title + page / slide / section / chapter,
-     or title + URL + access date (YYYY-MM-DD). Decision: keep, qualify or reject — one word. -->
-
 | AI claim | Source and locator | Evidence found | Decision |
 | --- | --- | --- | --- |
 | A 1990s setting means no smartphones or modern web browsers, so 'any device' may mean campus terminals or early PCs. | W3C, "A Little History of the World Wide Web," https://www.w3.org/History.html (accessed 2026-10-11) | university LANs and Unix workstations were common by the mid-1990s. "Any device" could mean any campus-networked terminal, not only a PC | qualify |
 | No AI can be blamed in a post-incident review. | SO/IEC 27001:2022, Clause 5.3 (roles, responsibilities and authorities) and Annex A.5.24 (incident management); NIST AI RMF 1.0 (2023) | Accountability is assigned to human roles. An AI tool cannot hold legal liability, but its output can be named as a causal contributor in an incident report | qualify |
 
 ### Change log
-
-<!-- At least two substantive revisions. Your final version must differ from the AI wording,
-     and the reason must say which evidence or scenario constraint made you change it. -->
 
 | AI wording / suggestion | Your final version | Reason for change |
 | --- | --- | --- |
