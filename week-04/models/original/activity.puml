@@ -1,0 +1,33 @@
+@startuml
+title Book Room - Activity Diagram
+
+start
+
+:Enter booking details;
+:Select room and requested time;
+
+if (Time range valid?) then (yes)
+  :Check room blocked status;
+
+  if (Room blocked?) then (yes)
+    :Reject booking;
+    stop
+  else (no)
+    :Check for overlapping active bookings;
+
+    if (Overlapping booking exists?) then (yes)
+      :Reject booking;
+      stop
+    else (no)
+      :Create booking;
+      :Confirm booking;
+      :Display booking confirmation;
+      stop
+    endif
+  endif
+
+else (no)
+  :Reject booking;
+  stop
+endif
+@enduml
