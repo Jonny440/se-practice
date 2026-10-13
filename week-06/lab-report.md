@@ -14,10 +14,10 @@ grader find your answers by them. Add rows to any table; never remove its header
 | | |
 | --- | --- |
 | Tool | Bolt.new |
-| Exact model (as Bolt shows it, or `not displayed`) | |
+| Exact model (as Bolt shows it, or `not displayed`) | Standart |
 | Bolt project link (or `not shared`, and why) | |
-| Browser and version | |
-| If you could not use Bolt.new: the tool you used instead, and why | |
+| Browser and version | Chrome 151.0.7922.48 |
+| If you could not use Bolt.new: the tool you used instead, and why | Claude Code, because it is already on my pc, easy to start |
 
 ---
 
@@ -28,14 +28,19 @@ Fill the first three columns now; fill the last one after Task 3.
 
 | # | What I expect to go wrong | AC it concerns | Was I right? (after Task 3) |
 | --- | --- | --- | --- |
-| 1 | | | |
-| 2 | | | |
+| 1 | Edge cases: 0; 1440 | AC1 |  |
+| 2 | Mobile page | AC6 | |
 
 **The initial prompt exactly as I sent it** — the deck's prompt with AC1–AC6 pasted in place of
 `[paste AC1–AC6]`, nothing else changed:
 
 ```text
-(paste here)
+Build a small responsive Smart Campus Room Availability Checker. Requirements: [AC1: Accept a candidate interval only when 0 ≤ start < end ≤ 1440 and start is after the supplied current time.
+AC2: Reject a booking longer than 120 minutes.
+AC3: Reject the request when the selected room is blocked.
+AC4: Reject any interval that overlaps an existing booking; touching endpoints are allowed.
+AC5: Show a clear Available / Unavailable decision without changing the existing booking data.
+AC6: The page remains usable at desktop and narrow/mobile width and gives understandable validation feedback.]. Use fictional sample data only. Keep the implementation simple and within one-page scope. Do not add authentication, backend services, analytics, or unrelated features. After building, briefly list the main files/components you created.
 ```
 
 ---
