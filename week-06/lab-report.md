@@ -53,18 +53,26 @@ prompt: yes / no
 **Bolt's list of the files/components it created, pasted unedited:**
 
 ```text
-dist            package.json        tsconfig.app.json
-eslint.config.js    postcss.config.js    tsconfig.json
-index.html        src            tsconfig.node.json
-package-lock.json    tailwind.config.js    vite.config.ts
+dist            
+package.json        
+tsconfig.app.json
+eslint.config.js    
+postcss.config.js    
+tsconfig.json
+index.html        
+src            
+tsconfig.node.json
+package-lock.json    
+tailwind.config.js    
+vite.config.ts
 ```
 
 **What v1 does — one line per thing that works, or visibly does not:**
+
 Room choosing - each room has its own bookings, blocked criteria.
 Check Availability button - the button itself works, it starts the availability algorithm, but the algo itself is wrong.
 Blocked criteria - a user cannot book a blocked room
 Current time updates correctly
-
 -
 
 **Repair prompt** (only if the first build did not run — the deck allows one, then the result is
@@ -84,15 +92,15 @@ no way to set up the case). Save each final run as `evidence/final-T<n>.png`.
 
 | # | Case | What you set up and request | Expected | AC | Result on v1 | Result on final | Final screenshot |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| T1 | Touching | 11:00–12:00 | Available | AC4 | Unavailable | Available / Unavailable / Not testable | final-T1.png |
-| T2 | Overlap | 10:30–11:30 | Unavailable | AC4 | Unavailable | Available / Unavailable / Not testable | final-T2.png |
-| T3 | Blocked | 11:00–12:00, room blocked | Unavailable | AC3 | Unavailable | Available / Unavailable / Not testable | final-T3.png |
-| T4 | Exactly 2 hours | 12:00–14:00 | Available | AC2 | Available | Available / Unavailable / Not testable | final-T4.png |
-| T5 | Over 2 hours | 12:00–14:01 | Unavailable | AC2 | Available | Available / Unavailable / Not testable | final-T5.png |
-| T6 | Starts now | 09:00–09:30 (current time 09:00) | Unavailable | AC1 | Not testable | Available / Unavailable / Not testable | final-T6.png |
-| T7 | Reversed times | 12:00–11:00, and the page says why | Unavailable | AC1, AC6 | Unavailable | Available / Unavailable / Not testable | final-T7.png |
-| T8 | Same check twice | T1, then T1 again without reloading | Available | AC5 | Available | Available / Unavailable / Not testable | final-T8.png |
-| T9 | Narrow screen | T1 at about 375 px wide | Available | AC6 | Available | Available / Unavailable / Not testable | final-T9.png |
+| T1 | Touching | 11:00–12:00 | Available | AC4 | Unavailable | Available | final-T1.png |
+| T2 | Overlap | 10:30–11:30 | Unavailable | AC4 | Unavailable | Unavailable | final-T2.png |
+| T3 | Blocked | 11:00–12:00, room blocked | Unavailable | AC3 | Unavailable | Unavailable | final-T3.png |
+| T4 | Exactly 2 hours | 12:00–14:00 | Available | AC2 | Available | Available  | final-T4.png |
+| T5 | Over 2 hours | 12:00–14:01 | Unavailable | AC2 | Available | Unavailable | final-T5.png |
+| T6 | Starts now | 09:00–09:30 (current time 09:00) | Unavailable | AC1 | Not testable | Unavailable | final-T6.png |
+| T7 | Reversed times | 12:00–11:00, and the page says why | Unavailable | AC1, AC6 | Unavailable | Unavailable | final-T7.png |
+| T8 | Same check twice | T1, then T1 again without reloading | Available | AC5 | Available | Available | final-T8.png |
+| T9 | Narrow screen | T1 at about 375 px wide | Available | AC6 | Available | Available | final-T9.png |
 
 ---
 
@@ -105,7 +113,7 @@ log a justified cleanup that preserves behaviour. Save a screenshot of each as
 
 | # | Issue | Evidence: steps → expected → observed | Priority | Decision |
 | --- | --- | --- | --- | --- |
-| 1 | Duration of the book is not calculated correctly | start_time=11:00, end_time=13:00 -> 120 minutes -> 164 minutes| High | Fix |
+| 1 | Duration of the book is not calculated correctly | start_time=11:00, end_time=13:00 -> 120 minutes -> 164 minutes | High | Fix |
 | 2 | Invalid problem popup | start_time=15:45, end_time=16:45 -> Unavailable: already booked -> Unavailable: invalid time interval | Medium | Fix |
 | 3 | Choosing time slot | You can choose only from given time by 15 minutes, not 15:59 | Low | Reject |
 | 4 | Choosing current time | Current time automatically updates, for testing i want to change it | Low | Reject |
@@ -120,13 +128,27 @@ in) and Bolt's answer, unedited.
 **Functional fix prompt, as sent, and Bolt's answer:**
 
 ```text
-(paste here)
+In the current prototype, start_time=11:00, end_time=13:00 produces 164 minutes , but AC2 requires 120 minutes. Make the smallest change that fixes this behavior. Preserve the other acceptance criteria. Explain which file/component you changed and why.
+
+626f6c742d63632d6167656e74Let me look at the duration calculation in the component.Let me check the availability logic too.Found it. The bug is an argument-order mismatch between the function signature and its call site.
+
+The `checkAvailability` function signature expects `(room, start, end, currentTime, bookings)`, but the call in `handleCheck` passes `(start, end, currentTime, selectedRoom, SAMPLE_BOOKINGS)` — `selectedRoom` lands in the `currentTime` parameter and the actual `currentTime` value lands in the `end` parameter. So `end - start` inside the function computes `currentTime - actualEnd` instead of `actualEnd - actualStart`. With a current time around 15:44 (944 min) and end=13:00 (780 min), that produces 944 - 780 = 164 minutes.Build passes.
+
+**What changed and why:** In `RoomAvailabilityChecker.tsx`, the call to `checkAvailability` had its arguments in the wrong order — it was passing `start, end, currentTime, selectedRoom, ...` but the function expects `room, start, end, currentTime, ...`. This meant the room object landed in the `currentTime` parameter and the real current-time value landed in the `end` parameter, so the duration calculation inside the function computed `currentTime - end` (e.g. ~15:44 minus 13:00 = 164 min) instead of the true `end - start` (120 min). Reordering the arguments to match the signature fixes the behavior while leaving all other acceptance criteria intact.
 ```
 
 **Cleanup prompt, as sent, and Bolt's answer:**
 
 ```text
-(paste here)
+Review only current time, start_time and end_time for unnecessary duplication, confusing naming, or UI feedback problems. Suggest one small cleanup. Do not add features or redesign the whole application. Implement it only if it preserves AC1–AC6. I want to be able to choose any time i mentioned by writing it
+
+626f6c742d63632d6167656e74Let me re-read the current component to review the time-related code.Here's my review of the time-related code:
+
+**Issue found:** The start and end time fields use `<select>` dropdowns restricted to 15-minute increments (00:00, 00:15, 00:30, ...). This means you can't type a time like 11:00 or 13:00 directly — you can only pick from the pre-built list. The `TIME_OPTIONS` array (97 entries generated at module load) exists solely to populate these dropdowns, which is unnecessary duplication when a native time input handles validation for free.
+
+**Cleanup:** Replace both dropdowns with `<input type="time">` fields. This lets you type any time directly, removes the `TIME_OPTIONS` constant and the `MINUTES_PER_DAY` import that only fed it, and the native input still produces "HH:MM" values that `labelToMinutes` already parses. All acceptance criteria are preserved — validation, the 120-minute cap, overlap checks, blocked rooms, and mobile/desktop usability all work identically.Build passes. 
+
+**What changed:** I replaced the two time dropdowns (which were locked to 15-minute increments) with native time input fields. You can now type any time directly — like 11:00 or 13:00 — instead of picking from a fixed list. The `TIME_OPTIONS` array that existed only to populate those dropdowns was removed, along with the `MINUTES_PER_DAY` import that only fed it. The existing validation in `labelToMinutes` and `checkAvailability` still catches invalid times, durations over 120 minutes, overlaps, and blocked rooms exactly as before.
 ```
 
 Add further blocks for further prompts.
@@ -136,8 +158,8 @@ the AC (or the scope) that justifies it.
 
 | # | What Bolt changed or suggested | accept / reject | Reason — cite the AC or the scope | Retest: which cases, result |
 | --- | --- | --- | --- | --- |
-| 1 | | accept / reject | | |
-| 2 | | accept / reject | | |
+| 1 | Fixed the can_book function | accept | AC1-AC5 | AC1-AC5, all of them are now produce expected result |
+| 2 | Changed start_time and end time choosing from dropdown menu to input text box | accept | UX | Better UX |
 
 ---
 
@@ -147,8 +169,8 @@ Two to four concrete changes, each one retested.
 
 | # | Issue | Decision | Change (file or component) | Result after retest |
 | --- | --- | --- | --- | --- |
-| 1 | | | | |
-| 2 | | | | |
+| 1 | can_book function not working properly | fix the attributes | bolt changed the order of the attributes, like: start_time, end_time, existing | Expected result |
+| 2 | Time is chosen through dropdown menu | Fix | Change it to input type text box | Better UX |
 
 ---
 
@@ -158,10 +180,10 @@ Pick one file or component Bolt generated that matters for AC1–AC5 — the one
 availability is the best choice. Name its path in backticks, then explain in your own words, without
 the assistant, what it does and how it decides. 60 words or more.
 
-**File:** `(write here, e.g. src/App.tsx)`
+**File:** `(write here, e.g. src/App.tsx)` project/src/components/RoomAvailabilityChecker.tsx
 
 <!-- Write your explanation below this line -->
-
+This file is showing our whole page. It downloads availability.ts as a lib and sends what user inputed into this file. Availability.ts checks each AC and if it fails, sends the unavailable with a appropriate warning message. And since our UI input are in format HH:MM there are also 2 helper functions to turn them into minutes after midnight and vice versa. If all AC1-AC4 are passed correctly then AC5 sends the available text, which is processed by a typescript component page.
 ---
 
 ## 9. What still fails, and what the criteria do not say
@@ -172,7 +194,7 @@ The same IDs as `known_fails` in `submission.yml`. Write `none` if the run is cl
 
 | Check | Why it stays |
 | --- | --- |
-| | |
+| none | none |
 
 ### 9.2 The end of the day
 
@@ -180,6 +202,7 @@ AC1 allows `end ≤ 1440` — a booking may end at 24:00. Can a user of your fin
 23:00–24:00? How — and if not, why is that acceptable or not? (This is the value you declare in
 `submission.yml` under `assumptions.end_of_day`.)
 
+No, the maximum time is allowed is 23:59, this is not acceptible, we should send one more focused prompt to allow that
 -
 
 ### 9.3 Which "now"?
@@ -187,6 +210,7 @@ AC1 allows `end ≤ 1440` — a booking may end at 24:00. Can a user of your fin
 AC1 says "after the supplied current time". What did **v1** use as the current time, and what did
 that mean for testing case T6?
 
+At first it automatically update to real current time. I fixed it for testing, and now you can choose the current time.
 -
 
 ---
@@ -204,3 +228,4 @@ that mean for testing case T6?
      booking data." -->
 
 <!-- Write your conclusion below this line -->
+I predicted it would be hard for assistant to work with edge cases (0, 1440), and in the end it really brought troubles. Page can not handle the end time to be 1440. After that, the AI did not give any suggestions, because I only asked for focused changes, and cleanups. The main difference between the projec looks finished and it meets all criteria is unit testing. QA engineer should take to account all possible inputs the user can come up with and give the proper warning to help user. In the V1 almost 50% percent of the Testcases went wrong, these are: T1, T5, T6. And some other tests like T4 and T3 gave the expected result, however they were wrong too. With different inputs they gave wrong output. It happened because the webpage did the order of the function attributes wrong and after my focused prompt everything was ok.
