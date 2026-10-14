@@ -15,7 +15,7 @@ grader find your answers by them. Add rows to any table; never remove its header
 | --- | --- |
 | Tool | Bolt.new |
 | Exact model (as Bolt shows it, or `not displayed`) | Standart |
-| Bolt project link (or `not shared`, and why) | |
+| Bolt project link (or `not shared`, and why) | https://smart-campus-room-av-1y0l.bolt.host |
 | Browser and version | Chrome 151.0.7922.48 |
 | If you could not use Bolt.new: the tool you used instead, and why | Claude Code, because it is already on my pc, easy to start |
 
@@ -53,10 +53,17 @@ prompt: yes / no
 **Bolt's list of the files/components it created, pasted unedited:**
 
 ```text
-(paste here)
+dist            package.json        tsconfig.app.json
+eslint.config.js    postcss.config.js    tsconfig.json
+index.html        src            tsconfig.node.json
+package-lock.json    tailwind.config.js    vite.config.ts
 ```
 
 **What v1 does — one line per thing that works, or visibly does not:**
+Room choosing - each room has its own bookings, blocked criteria.
+Check Availability button - the button itself works, it starts the availability algorithm, but the algo itself is wrong.
+Blocked criteria - a user cannot book a blocked room
+Current time updates correctly
 
 -
 
