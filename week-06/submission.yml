@@ -19,7 +19,7 @@ student:
 
 assistant:
   tool: Bolt.new               # Bolt.new — or the tool you used instead, with fallback_reason filled
-  model: Standart              # the exact model Bolt shows (with its version), or: not displayed
+  model: not displayed              # the exact model Bolt shows (with its version), or: not displayed
   fallback_reason:     # only if tool is not Bolt.new: why (e.g. "Bolt daily token limit reached"); else: none
 
 bolt:
@@ -40,27 +40,27 @@ checker:
   pass: 23
   fail: 4
   error: 0
-  commit:              # the commit you ran the checker at: git rev-parse --short HEAD
+  commit: 80d6290              # the commit you ran the checker at: git rev-parse --short HEAD
                        # (normally the commit just before you commit this file — that is fine)
-  known_fails: []      # every check ID that is still FAIL or ERROR, explained in lab-report.md §9.1, e.g. [T6, E4]
+  known_fails: ['L3', 'L6', 'L8', 'P3']      # every check ID that is still FAIL or ERROR, explained in lab-report.md §9.1, e.g. [T6, E4]
 
 assumptions:
   # AC1 allows a booking to end at 1440 (24:00). A time input usually stops at 23:59.
   # Decide what YOUR final page does, declare it, defend it in lab-report.md §9.2.
   # Any answer is acceptable. Not deciding is not.
-  end_of_day:          # typed-24:00 | end-of-day-option | minutes-input | not-expressible
+  end_of_day: minutes-input         # typed-24:00 | end-of-day-option | minutes-input | not-expressible
 
 review_findings:
   # Three or more. One line each, and each one names what it is about: an AC, a case (T1-T9),
   # v1, or a file in prototype/.
   # Worthless:        "Bolt made some mistakes"
   # Worth everything: "T8: v1's Check button pushed the request into bookings, so the second check said Unavailable (AC5)"
-  -
-  -
-  -
+  - You should specify the input type you want. In my case, I wanted to input by keyboard, but AI implemented it with a dropdown menu
+  - Ai assumed the current time to be real and automatically update, which is right, however for testing purposes i had to chagne the code to change the current time
+   - If the system looks finished and good, you still have to unit test every case, or you might get in trouble and leave bugs in code, for instance in v1 there were bugs with T1-T6.
 
 honesty:
-  v1_export_unedited:                # yes | no   original/ holds Bolt's first version, as downloaded
-  screenshots_unedited:              # yes | no   every image in evidence/ is an unedited capture
-  can_explain_component_without_ai:  # yes | no   you may be asked in class
-  ai_usage_disclosed:                # yes | no   AI_USAGE.md is complete
+  v1_export_unedited: yes              # yes | no   original/ holds Bolt's first version, as downloaded
+  screenshots_unedited:   yes           # yes | no   every image in evidence/ is an unedited capture
+  can_explain_component_without_ai: yes # yes | no   you may be asked in class
+  ai_usage_disclosed: yes               # yes | no   AI_USAGE.md is complete
