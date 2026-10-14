@@ -84,15 +84,15 @@ no way to set up the case). Save each final run as `evidence/final-T<n>.png`.
 
 | # | Case | What you set up and request | Expected | AC | Result on v1 | Result on final | Final screenshot |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| T1 | Touching | 11:00–12:00 | Available | AC4 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T1.png |
-| T2 | Overlap | 10:30–11:30 | Unavailable | AC4 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T2.png |
-| T3 | Blocked | 11:00–12:00, room blocked | Unavailable | AC3 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T3.png |
-| T4 | Exactly 2 hours | 12:00–14:00 | Available | AC2 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T4.png |
-| T5 | Over 2 hours | 12:00–14:01 | Unavailable | AC2 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T5.png |
-| T6 | Starts now | 09:00–09:30 (current time 09:00) | Unavailable | AC1 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T6.png |
-| T7 | Reversed times | 12:00–11:00, and the page says why | Unavailable | AC1, AC6 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T7.png |
-| T8 | Same check twice | T1, then T1 again without reloading | Available | AC5 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T8.png |
-| T9 | Narrow screen | T1 at about 375 px wide | Available | AC6 | Available / Unavailable / Not testable | Available / Unavailable / Not testable | final-T9.png |
+| T1 | Touching | 11:00–12:00 | Available | AC4 | Unavailable | Available / Unavailable / Not testable | final-T1.png |
+| T2 | Overlap | 10:30–11:30 | Unavailable | AC4 | Unavailable | Available / Unavailable / Not testable | final-T2.png |
+| T3 | Blocked | 11:00–12:00, room blocked | Unavailable | AC3 | Unavailable | Available / Unavailable / Not testable | final-T3.png |
+| T4 | Exactly 2 hours | 12:00–14:00 | Available | AC2 | Available | Available / Unavailable / Not testable | final-T4.png |
+| T5 | Over 2 hours | 12:00–14:01 | Unavailable | AC2 | Available | Available / Unavailable / Not testable | final-T5.png |
+| T6 | Starts now | 09:00–09:30 (current time 09:00) | Unavailable | AC1 | Not testable | Available / Unavailable / Not testable | final-T6.png |
+| T7 | Reversed times | 12:00–11:00, and the page says why | Unavailable | AC1, AC6 | Unavailable | Available / Unavailable / Not testable | final-T7.png |
+| T8 | Same check twice | T1, then T1 again without reloading | Available | AC5 | Available | Available / Unavailable / Not testable | final-T8.png |
+| T9 | Narrow screen | T1 at about 375 px wide | Available | AC6 | Available | Available / Unavailable / Not testable | final-T9.png |
 
 ---
 
@@ -105,8 +105,10 @@ log a justified cleanup that preserves behaviour. Save a screenshot of each as
 
 | # | Issue | Evidence: steps → expected → observed | Priority | Decision |
 | --- | --- | --- | --- | --- |
-| 1 | | | High / Medium / Low | Fix / Reject / Defer |
-| 2 | | | High / Medium / Low | Fix / Reject / Defer |
+| 1 | Duration of the book is not calculated correctly | start_time=11:00, end_time=13:00 -> 120 minutes -> 164 minutes| High | Fix |
+| 2 | Invalid problem popup | start_time=15:45, end_time=16:45 -> Unavailable: already booked -> Unavailable: invalid time interval | Medium | Fix |
+| 3 | Choosing time slot | You can choose only from given time by 15 minutes, not 15:59 | Low | Reject |
+| 4 | Choosing current time | Current time automatically updates, for testing i want to change it | Low | Reject |
 
 ---
 
