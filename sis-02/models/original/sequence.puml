@@ -1,0 +1,75 @@
+@startuml
+title Course Registration — Browse + Register (guarded atomic enroll)
+skinparam sequenceMessageAlign center
+autonumber
+
+actor Student
+participant "CatalogUI" as UI
+participant "RegistrationService" as SVC
+participant "OfferingRepository" as OFFREPO
+participant "EnrollmentRepository" as ENRREPO
+participant "offering : CourseOffering" as OFF
+
+== Browse catalog (R1 / AC-01) ==
+Student -> UI : browseCatalog(semester)
+UI -> SVC : listOfferings(semester)
+SVC -> OFFREPO : findBySemester(semester)
+OFFREPO --> SVC : offerings[]
+loop for each offering
+  SVC -> OFF : availablePlaces()
+  OFF --> SVC : capacity - enrollmentCount
+end
+SVC --> UI : catalog rows\n(courseCode, title, offering, availablePlaces)
+UI --> Student : display catalog
+
+== Register — guarded atomic operation (R2–R5) ==
+Student -> UI : requestRegistration(offeringId)
+UI -> SVC : register(student, offeringId)
+SVC -> OFFREPO : findById(offeringId)
+OFFREPO --> SVC : offering
+
+note over OFF
+  ATOMIC OPERATION (single transaction):
+  duplicate check (R3) + availability recheck (R2)
+  + conditional insert + count update (R4)
+  or no-op with reason (R5). No interleaving.
+end note
+
+SVC -> OFF : tryEnroll(student)
+activate OFF
+
+alt already enrolled (R3 / AC-05)
+  OFF -> ENRREPO : existsByStudentAndOffering(student, offering)
+  ENRREPO --> OFF : true
+  OFF --> SVC : Rejected("already enrolled")
+  note right of OFF : no enrollment created;\ncount unchanged
+else place available (R2 / AC-03)
+  OFF -> ENRREPO : existsByStudentAndOffering(student, offering)
+  ENRREPO --> OFF : false
+  OFF -> OFF : enrollmentCount < capacity ?
+  OFF -> ENRREPO : save(new Enrollment(student, offering))
+  ENRREPO --> OFF : saved
+  OFF -> OFF : enrollmentCount += 1
+  OFF --> SVC : Confirmed(enrollment)
+  note right of OFF : exactly one enrollment;\navailable places decreased by one
+else course full (R2 / AC-04, AC-06)
+  OFF -> ENRREPO : existsByStudentAndOffering(student, offering)
+  ENRREPO --> OFF : false
+  OFF -> OFF : enrollmentCount >= capacity
+  OFF --> SVC : Rejected("course full")
+  note right of OFF : no enrollment created;\ncount unchanged
+end
+deactivate OFF
+
+SVC --> UI : result
+UI --> Student : confirmation OR rejection explanation
+
+== Concurrent request (AC-06) ==
+note over Student, OFF
+  If a second student registers for the same offering
+  before the first commit, the atomic tryEnroll on the
+  offering serializes: at most one commit succeeds;
+  the other returns Rejected("course full").
+  enrollmentCount never exceeds capacity.
+end note
+@enduml
