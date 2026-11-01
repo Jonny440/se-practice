@@ -1,0 +1,49 @@
+schema: 1
+assignment: "sis-03"            # do not edit
+
+student:
+  name: Zhanibek Batyrbekov     # as in the university register
+  student_id: 24B031689         # e.g. 00X000000
+  group: Mon 16:00-19:00        # your group code, as in the timetable
+  github: Jonny440              # username only, not a URL
+
+assistant:
+  tool: ChatGPT (web)           # the coding assistant for the Python part
+  model: ChatGPT-5.6 Sol        # exactly as in report.md section 1
+
+bolt:
+  model: not displayed          # the model Bolt shows, or: not displayed
+  project_url: https://bolt.new/p/71992720
+
+language:
+  name: python                  # python | javascript | typescript | java | csharp | go | cpp
+  path: A                       # A (Python) | B (any other language)
+
+reuse:
+  python_v1: week-05
+  web_v1: week-06
+
+checker:
+  pass: 55
+  fail: 0
+  error: 0
+  commit: 63046e7               # git rev-parse --short HEAD
+
+counts:
+  tests: 21
+  exchanges: 5
+  issues: 4
+  critique_decisions: 5
+  reflection_words: 166
+
+cases:
+  python_final_matches: 11
+  page_final_matches: 10
+
+known_fails: []
+
+honesty:
+  v1_unedited: yes
+  screenshots_unedited: yes
+  results_observed: yes
+  ai_usage_disclosed: yes

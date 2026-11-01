@@ -1,0 +1,57 @@
+@startuml
+title Domain Model — Course Registration
+skinparam classAttributeIconSize 0
+
+class Student {
+  studentId : String {id}
+  name : String
+}
+
+class Course {
+  courseCode : String {id}
+  title : String
+}
+
+class CourseOffering {
+  offeringId : String {id}
+  semester : String
+  capacity : int {capacity > 0}
+  enrollmentCount : int {0 <= enrollmentCount <= capacity}
+  + availablePlaces() : int
+  + tryEnroll(s : Student) : Result
+}
+
+class Enrollment {
+  enrollmentId : String {id}
+  enrolledAt : DateTime
+}
+
+class Result <<enumeration>> {
+  CONFIRMED
+  COURSE_FULL
+  ALREADY_ENROLLED
+}
+
+Student "1" -- "0..*" Enrollment : has >
+Course "1" -- "1..*" CourseOffering : offered as >
+CourseOffering "1" -- "0..*" Enrollment : receives >
+Enrollment "*" -- "1" Student
+Enrollment "*" -- "1" CourseOffering
+
+note top of CourseOffering
+  Invariant (R2): enrollmentCount <= capacity
+  capacity is a positive whole number (given)
+  availablePlaces = capacity - enrollmentCount (R1)
+end note
+
+note bottom of Enrollment
+  Uniqueness (R3): (student, offering) is unique
+  => at most one Enrollment per student per offering
+end note
+
+note right of Result
+  R5: COURSE_FULL and ALREADY_ENROLLED
+  are rejection outcomes; no Enrollment created,
+  enrollmentCount unchanged.
+end note
+@enduml
