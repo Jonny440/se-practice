@@ -1,0 +1,51 @@
+# week-08/submission.yml — your declaration for this lab.
+#
+# Facts only. Every explanation goes in lab-report.md; nothing here repeats prose.
+
+schema: 1
+week: "08"
+
+student:
+  name: Zhanibek Batyrbekov
+  student_id: 24B031689
+  github: Jonny440
+
+assistant:
+  tool: DuckDuckGo AI Chat (Duck.ai)
+  model: GPT-6 Luna
+
+skill:
+  environment: prompt-only
+  invoked: not-shown
+
+project:
+  language: ts
+  vitest: 3.2.7
+
+counts:
+  tests_final: 19
+  buggy_failed: 4
+  defects_logged: 2
+  lines_changed: 2
+
+checker:
+  pass: 31
+  fail: 0
+  error: 0
+  commit: 37d15fb
+  known_fails: []
+
+verdict:
+  skill_helped: yes
+
+review_findings:
+  - BUG-A: the inclusive overlap test rejected endpoints that touch, which T01, T08, T14 and BUG-A each catch.
+  - BUG-B: the push only ran on a touch-free Available slot, so the AC5 test had to use 720-780 or BUG-A would have stopped it first.
+  - T05: start == now must stay Unavailable, so the no-skill answer's change from start > now to start < now was rejected in section 7.
+  - Step 4 of the skill: separating confirmed defects from hypotheses kept the patch to the two lines the tests point at.
+
+honesty:
+  buggy_function_pasted_unchanged: yes
+  same_input_both_chats: yes
+  outputs_unedited: yes
+  ai_usage_disclosed: yes
