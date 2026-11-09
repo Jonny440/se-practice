@@ -1,0 +1,49 @@
+{
+  "name": "check_room",
+  "description": "The function checks booking availability. The units are minutes after midnight and range from 0 to 1440. The tool does not save or create a booking, only check.",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+        "start": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1440
+        },
+        "end": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1440
+        },
+        "now": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1440,
+            "description": "time right now"
+        },
+        "blocked": {
+            "type": "boolean"
+        },
+        "bookings": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "start": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1440
+                    },
+                    "end": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 1440
+                    }
+                },
+                "required": ["start", "end"]
+            }
+        }
+    },
+    "required": ["start","end","now","blocked","bookings"],
+    "additionalProperties": false
+  }
+}
