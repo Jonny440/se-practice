@@ -1,49 +1,54 @@
 {
   "name": "check_room",
-  "description": "The function checks booking availability. The units are minutes after midnight and range from 0 to 1440. The tool does not save or create a booking, only check.",
+  "description": "Checks whether one meeting room is free for a single requested time window on one day, and answers Available or Unavailable. Every time is a whole number of minutes since midnight, so 10:00 is 600 and 24:00 is 1440, and every time must lie between 0 and 1440. The tool only checks the request: it does not save, create, change or cancel a booking and it writes nothing, so calling it has no side effects. Pass the requested start and end, the current time, whether the room is blocked today, and the list of bookings that already exist that day.",
   "inputSchema": {
     "type": "object",
     "properties": {
-        "start": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1440
-        },
-        "end": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1440
-        },
-        "now": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 1440,
-            "description": "time right now"
-        },
-        "blocked": {
-            "type": "boolean"
-        },
-        "bookings": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "start": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 1440
-                    },
-                    "end": {
-                        "type": "integer",
-                        "minimum": 0,
-                        "maximum": 1440
-                    }
-                },
-                "required": ["start", "end"]
+      "start": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1440,
+        "description": "Requested start time as whole minutes since midnight (10:00 = 600)."
+      },
+      "end": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1440,
+        "description": "Requested end time as whole minutes since midnight (11:00 = 660, 24:00 = 1440)."
+      },
+      "now": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 1440,
+        "description": "Current time as whole minutes since midnight (9:00 = 540)."
+      },
+      "blocked": {
+        "type": "boolean",
+        "description": "True if the room is blocked today, for example for maintenance."
+      },
+      "bookings": {
+        "type": "array",
+        "description": "Existing bookings for that day as objects with start and end minutes; use [] when there are none.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1440
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1440
             }
+          },
+          "required": ["start", "end"],
+          "additionalProperties": false
         }
+      }
     },
-    "required": ["start","end","now","blocked","bookings"],
+    "required": ["start", "end", "now", "blocked", "bookings"],
     "additionalProperties": false
   }
 }
