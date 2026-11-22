@@ -1,0 +1,33 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+package "app/src" {
+  [App] as App
+  [RoomAvailabilityChecker\n(UI: filter form, room grid,\nresult card, booking list)] as Page
+  [FilterPanel\n(attendees + equipment inputs)] as FilterPanel
+  [RoomCard\n(one room, presentation)] as RoomCard
+  [time\n(labelToMinutes, minutesToLabel)] as Time
+  [rooms\n(Room type + ROOMS catalog)] as Rooms
+  [booking\n(canBook AC1-AC5, checkRoom F3/F5,\nMAX_DURATION)] as Booking
+  [filter\n(filterRooms F1/F2)] as Filter
+}
+
+package "app/src tests" {
+  [booking.test\n(17 tests: AC1-AC5, F3, F5, B1-B4)] as BookingTests
+  [filter.test\n(8 tests: F1, F2, F4, B5, B6, INT)] as FilterTests
+}
+
+App --> Page
+Page --> FilterPanel
+Page --> RoomCard
+Page --> Filter
+Page --> Booking
+Page --> Rooms
+Page --> Time
+Filter --> Rooms
+Booking --> Rooms
+BookingTests --> Booking
+FilterTests --> Filter
+FilterTests --> Booking
+@enduml

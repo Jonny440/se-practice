@@ -1,0 +1,26 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+package "app/src" {
+  [App] as App
+  [RoomAvailabilityChecker\n(page: form, result, bookings)] as Page
+}
+
+package "app/src/lib" {
+  [rooms\n(Room, Booking, ROOMS, SAMPLE_BOOKINGS)] as Rooms
+  [booking\n(canBook)] as Booking
+  [availability\n(checkAvailability, labelToMinutes,\nminutesToLabel, MAX_DURATION)] as Availability
+}
+
+package "app/src/lib tests" {
+  [booking.test\n(19 tests of canBook)] as Tests
+}
+
+App --> Page
+Page --> Rooms
+Page --> Availability
+Availability --> Booking
+Availability --> Rooms
+Tests --> Booking
+@enduml
