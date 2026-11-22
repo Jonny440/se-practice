@@ -1,5 +1,7 @@
 import { test, expect } from "vitest";
 import { canBook } from "./booking";
+import { checkAvailability, labelToMinutes } from "./availability";
+import { ROOMS, SAMPLE_BOOKINGS } from "./rooms";
 
 // Fixed clock for every case: 08:00.
 const NOW = 8 * 60;
@@ -81,6 +83,12 @@ test("BUG-B an Available request that touches nothing changes no booking", () =>
 
   expect(canBook({ start: 900, end: 960, now: NOW, blocked: false, bookings })).toBe(true);
   expect(bookings).toEqual(before);
+});
+
+test("R1 AC1: a slot that ends exactly at midnight can be requested as 24:00", () => {
+  expect(labelToMinutes("24:00")).toBe(1440);
+  const room = ROOMS.find((r) => r.id === "r1")!;
+  expect(checkAvailability(room, 1380, 1440, NOW, SAMPLE_BOOKINGS)).toEqual({ available: true });
 });
 
 test("AC5 an Available decision leaves the bookings array unchanged", () => {
