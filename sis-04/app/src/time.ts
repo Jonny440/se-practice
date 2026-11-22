@@ -1,5 +1,3 @@
-export const MINUTES_PER_DAY = 1440;
-
 /** 600 -> "10:00" */
 export function minutesToLabel(minutes: number): string {
   const hours = Math.floor(minutes / 60);
